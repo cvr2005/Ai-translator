@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Translator | Translate Text Instantly</title>
+    <meta name="description" content="Free online AI-powered translator supporting multiple languages with text-to-speech functionality">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌍 AI Translator</h1>
+            <p class="subtitle">Translate text instantly with AI-powered accuracy</p>
+        </header>
+
+        <main>
+            <form method="POST" class="translate-form">
+                <div class="form-group">
+                    <label for="source-text" class="sr-only">Enter text to translate</label>
+                    <textarea 
+                        id="source-text" 
+                        name="text" 
+                        placeholder="Type or paste your text here..." 
+                        required
+                        rows="5"
+                        aria-label="Text to translate"
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="target-language" class="sr-only">Select target language</label>
+                    <div class="select-container">
+                        <select id="target-language" name="target" aria-label="Select target language">
+                            <option value="" disabled selected>Select a language</option>
+                            <option value="hi">हिंदी (Hindi)</option>
+                            <option value="te">తెలుగు (Telugu)</option>
+                            <option value="ta">தமிழ் (Tamil)</option>
+                            <option value="fr">Français (French)</option>
+                            <option value="es">Español (Spanish)</option>
+                            <option value="zh-cn">中文 (Chinese Simplified)</option>
+                            <option value="ar">العربية (Arabic)</option>
+                            <option value="de">Deutsch (German)</option>
+                            <option value="ja">日本語 (Japanese)</option>
+                            <option value="ru">Русский (Russian)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="translate-button">
+                    <span class="button-text">Translate</span>
+                    <span class="button-icon">→</span>
+                </button>
+            </form>
+
+            {% if translated %}
+                <div class="output" role="region" aria-live="polite">
+                    <div class="output-header">
+                        <h2>Translation</h2>
+                        <div class="language-indicator">
+                            <span class="language-tag">{{ target_lang_name }}</span>
+                        </div>
+                    </div>
+                    <div class="translated-text">
+                        <p>{{ translated }}</p>
+                    </div>
+                    {% if audio_path %}
+                    <div class="audio-container">
+                        <p class="listen-text">Listen to the pronunciation:</p>
+                        <audio 
+                            controls 
+                            {% if autoplay_audio %}autoplay{% endif %}
+                            aria-label="Audio pronunciation of translated text"
+                        >
+                            <source src="{{ audio_path }}" type="audio/mp3">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </main>
+
+        <footer class="app-footer">
+            <p>Powered by AI Translation Technology</p>
+            <p class="disclaimer">Translation accuracy may vary. For important content, please verify with a professional translator.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Add loading state to button
+        const form = document.querySelector('.translate-form');
+        if (form) {
+            form.addEventListener('submit', function() {
+                const button = this.querySelector('button[type="submit"]');
+                if (button) {
+                    button.disabled = true;
+                    button.innerHTML = '<span class="button-text">Translating...</span><span class="button-loading">⏳</span>';
+                }
+            });
+        }
+
+        // Auto-resize textarea
+        const textarea = document.getElementById('source-text');
+        if (textarea) {
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        }
+    </script>
+</body>
+</html>
